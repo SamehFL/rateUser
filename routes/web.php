@@ -1,6 +1,6 @@
 <?php
 
-/** @var \Laravel\Lumen\Routing\Router $router */
+/** @var Router $router */
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +13,17 @@
 |
 */
 
+use Laravel\Lumen\Routing\Router;
+
 $router->get('/', function () use ($router) {
     //return $router->app->version();
     echo "Rate User APIs - Test Project";
 });
 
-$router->post("rate","RateController@store");
 
+$router->post("register","UserController@register");
+$router->get("getUsersList","UserController@index");
+
+$router->post("rate","RateController@store");
+$router->get("getUserRatings/{rated_user_id}","RateController@show");
+$router->get("getUsersRatings","RateController@index");

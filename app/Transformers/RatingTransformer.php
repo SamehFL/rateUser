@@ -13,7 +13,7 @@ class RatingTransformer extends TransformerAbstract
         return[
             'rated_user_id'=>  $rating->rated_user_id,
             'rating'=>$rating->rating,
-            'rating_comment'=>$rating->ating_comment,
+            'rating_comment'=>$rating->rating_comment,
             'rating_date'=>$rating->created_at->format('jS F Y'),
             'rating_user' => [
                 'id'=> $rating->rating_user_id,

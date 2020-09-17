@@ -1,6 +1,15 @@
 <?php
 
+use Dusterio\LumenPassport\Lumen7Application;
+use Laravel\Lumen\Routing\UrlGenerator;
+
 require_once __DIR__.'/../vendor/autoload.php';
+
+/*try {
+    (new Dotenv\Dotenv(dirname(__DIR__)))->load();
+} catch (Dotenv\Exception\InvalidPathException $e) {
+    //
+}*/
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
@@ -23,8 +32,19 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
+$app = new Lumen7Application(
+    dirname(__DIR__)
+);
+
+$app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config');
+$app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storage');
+
 $app->withFacades();
 $app->withEloquent();
+
+$app->bind(\Illuminate\Contracts\Routing\UrlGenerator::class, function ($app) {
+    return new UrlGenerator($app);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +67,8 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Register Config Files
@@ -59,6 +81,8 @@ $app->singleton(
 */
 
 $app->configure('app');
+
+$app->configure('database');
 
 /*
 |--------------------------------------------------------------------------
@@ -75,9 +99,12 @@ $app->configure('app');
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+ $app->routeMiddleware([
+     'auth' => App\Http\Middleware\Authenticate::class,
+     //'client' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+ ]);
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -90,9 +117,17 @@ $app->configure('app');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+ $app->register(App\Providers\AppServiceProvider::class);
+ $app->register(App\Providers\AuthServiceProvider::class);
+ $app->register(App\Providers\EventServiceProvider::class);
+//$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+ $app->register(Laravel\Passport\PassportServiceProvider::class);
+ $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+/*$app->register(Illuminate\Redis\RedisServiceProvider::class);
+$app->register(BeyondCode\DumpServer\DumpServerServiceProvider::class);
+$app->register(Illuminate\Redis\RedisServiceProvider::class);*/
+//Dusterio\LumenPassport\LumenPassport::routes($app->router, ['prefix' => 'api/v1/oauth'] );
+Dusterio\LumenPassport\LumenPassport::routes($app->router);
 
 /*
 |--------------------------------------------------------------------------

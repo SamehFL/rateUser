@@ -6,8 +6,13 @@
     "type": "project",
     "require": {
         "php": "^7.3",
+        "dusterio/lumen-passport": "^0.2.20",
+        "laminas/laminas-httphandlerrunner": "^1.2",
         "laravel/lumen-framework": "^8.0",
-        "league/fractal": "^0.19.2"
+        "laravel/passport": "^10.0",
+        "league/fractal": "^0.19.2",
+        "shieldon/psr-http": "^1.2",
+        "zendframework/zend-httphandlerrunner": "^1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9.1",
